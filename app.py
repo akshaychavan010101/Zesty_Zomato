@@ -11,7 +11,6 @@ import openai
 from dotenv import load_dotenv
 import os
 
-
 load_dotenv()
 
 
@@ -340,6 +339,7 @@ def create_app():
 
 
 app = create_app()
+CORS(app)
 
 # ----------------normal user routes end----------------
 if __name__ == "__main__":
