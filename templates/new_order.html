@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Zesty Yum - New Order</title>
+    <link rel="stylesheet" href="./static/css/navbar.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/5cb8a0be4f.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        font-size: 18px;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .header {
+        margin: 20px;
+        text-align: left;
+      }
+      .menu {
+        flex: 1;
+      }
+
+      .selected-dishes {
+        flex: 1;
+        padding-left: 20px;
+      }
+
+      .container {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        height: 80vh;
+        padding: 20px;
+        background-color: #f2f2f2;
+      }
+      .left-container {
+        width: 75%;
+        padding: 20px;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+        background-color: white;
+        border-radius: 7px;
+      }
+
+      .right-container {
+        width: 20%;
+        padding: 20px;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+        background-color: white;
+        border-radius: 7px;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      .table-data-with-name-img {
+        display: flex;
+        align-items: center;
+        height: 100%;
+      }
+
+      .table-data-with-name-img span img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 7px;
+      }
+
+      .place-order-form {
+        width: 100%;
+      }
+
+      .selected-dishes {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        margin-top: 20px;
+      }
+
+      input[type="submit"] {
+        background-color: #4caf50;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #45a049;
+      }
+
+      input[type="text"] {
+        padding: 8px 16px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      input[type="checkbox"] {
+        height: 25px;
+        width: 25px;
+      }
+
+      li {
+        list-style-type: none;
+      }
+
+      .chatbot-container {
+        width: 500px;
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background-color: #86c5da;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .chat-log {
+        flex: 1;
+        max-height: 400px;
+        padding: 10px;
+        overflow-y: auto;
+      }
+
+      .chat-log::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      .chat-input {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+      }
+
+      .chat-input input {
+        width: 80%;
+        flex: 1;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-right: 10px;
+        outline: none;
+      }
+
+      .chat-input button {
+        width: 20%;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .chat-input button:hover {
+        background-color: #45a049;
+      }
+
+      .chat-item {
+        width: 100%;
+      }
+
+      .chat-item p {
+        padding: 5px 10px;
+        border-radius: 15px;
+      }
+
+      .chat-item--user {
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      .chat-item--user p {
+        background-color: #e1e0e0;
+        border-bottom-left-radius: 0px;
+      }
+
+      .chat-item--bot {
+        width: 70%;
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      .chat-item--bot p {
+        background-color: #74bf8b;
+        border-bottom-right-radius: 0px;
+        color: white;
+      }
+
+      #chatbot-toggle-btn {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        outline: none;
+      }
+
+      #chatbot-toggle-btn i {
+        color: rgb(181, 74, 165);
+        font-size: 2rem;
+        margin-right: 5px;
+      }
+
+      .chatbot-collapsed {
+        width: 120px;
+        padding: 5px;
+        display: flex;
+        justify-content: space-around;
+        animation: chatbot-collapse 0.5s ease;
+      }
+
+      .chat-input button:hover {
+        background-color: #45a049;
+      }
+
+      .chatbot-collapsed .chat-container {
+        display: none;
+      }
+
+      .chatbot-collapsed #chatbot-heading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #loading {
+        display: none;
+        text-align: left;
+        position: absolute;
+        bottom: 0%;
+        left: 4%;
+        width: 100%;
+        color: #fff;
+        font-weight: bold;
+        animation: fade-in-out 1s ease infinite;
+      }
+
+      @keyframes fade-in-out {
+        from {
+          color: #000000;
+        }
+        to {
+          color: #ffffff;
+        }
+      }
+
+      /* write an animation for chat collapse */
+      @keyframes chatbot-collapse {
+        from {
+          width: 500px;
+        }
+        to {
+          width: 120px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-logo">
+        <img src="https://i.postimg.cc/hGKRgzsr/zesty-yum.png" alt="Logo" />
+        <span>Zesty Yum</span>
+      </div>
+      <ul class="navbar-menu">
+        <li><a href="/menu">Menu</a></li>
+        <li><a href="/show-orders">All Orders</a></li>
+        <li>
+          <a href="/my-orders">My Orders</a>
+        </li>
+      </ul>
+    </nav>
+    <h1 class="header">New Order</h1>
+    <div class="container">
+      <div class="left-container">
+        <div class="menu">
+          <h2>Menu</h2>
+          <table>
+            <tr>
+              <th>Dish ID</th>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Availability</th>
+              <th>Select To Order</th>
+            </tr>
+            {% for dish in menu %}
+            <tr>
+              <td>{{ dish._id }}</td>
+              <td>
+                <div class="table-data-with-name-img">
+                  <span><img src="{{dish.img}}" alt="Img" /></span>
+                  <span>{{ dish.dish_name }}</span>
+                </div>
+              </td>
+              <td>{{ dish.price }}</td>
+              <td>{{ dish.availability.upper() }}</td>
+              <td>
+                <!-- provide the checkbox if the dish is available, else provide "Not available" -->
+                {% if dish.availability == "yes" %}
+
+                <input
+                  type="checkbox"
+                  name="total-dish"
+                  id="total-dish"
+                  value="{{ dish }}"
+                  class="dish-checkboxs"
+                />
+
+                {% else %}
+                <span class="not-available">Not available</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+      <div class="right-container">
+        <div class="place-order-form">
+          <form id="order-form" method="POST" action="/new-order">
+            <input
+              type="hidden"
+              id="added-dishes"
+              name="dishes"
+              value=""
+              required
+            />
+            <input type="submit" value="Place Order" />
+          </form>
+        </div>
+        <div class="selected-dishes">
+          <h2>Selected Dishes</h2>
+          <ul id="selected-dishes-list-names"></ul>
+        </div>
+        <!-- chatbot -->
+        <div class="chatbot-container" id="chatbot-container">
+          <h3 id="chatbot-heading">
+            <button id="chatbot-toggle-btn">
+              <i class="fa-solid fa-square-caret-down"></i>
+            </button>
+            Chat
+          </h3>
+          <div class="chat-container">
+            <div class="chat-log">
+              <!-- Chat log will be appended here -->
+            </div>
+            <div class="chat-input">
+              <div id="loading">Wait a moment...</div>
+              <input
+                type="text"
+                id="chat-input-field"
+                placeholder="Type your message..."
+              />
+              <button id="chat-send-btn">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const selectedDishesListNames = document.getElementById(
+        "selected-dishes-list-names"
+      );
+      const checkbox = document.querySelectorAll("input[type='checkbox']");
+      let list = [];
+      const orderForm = document.getElementById("order-form");
+
+      const userEmailinSession = sessionStorage.getItem("email");
+
+      const customer_name = document.getElementById("customer_name") || "User";
+      customer_name.value = userEmailinSession;
+
+      let loading = document.getElementById("loading");
+
+      // ----------------------------------------------------------------------
+      // check if user selected any dish or not or is there any dish available or not
+      function checkDishSelected() {
+        const ifOnecheckBox = document.querySelectorAll(".dish-checkboxs");
+        if (ifOnecheckBox.length == 0) {
+          alert("No Dish Available");
+          return false;
+        }
+
+        if (ifOnecheckBox.length > 0 && list.length == 0) {
+          alert("Please select at least one dish");
+          return false;
+        }
+
+        return true;
+      }
+
+      // ----------------------------------------------------------------------
+
+      // function to append the dish name and id to the list
+      function addDishToList(dishName, dishId) {
+        const listItem = document.createElement("li");
+        listItem.classList.add("selected-dish");
+        listItem.textContent = dishName + "-" + dishId;
+        selectedDishesListNames.appendChild(listItem);
+      }
+
+      // ----------------------------------------------------------------------
+
+      // form handeling
+      function handleFormSubmit(event) {
+        event.preventDefault();
+        let tosendList = document.getElementById("added-dishes"); // list to send in the form
+
+        if (checkDishSelected() == false) {
+          return;
+        }
+        list = JSON.stringify(list);
+        tosendList.value = list;
+        const checkboxes = document.querySelectorAll("input[type='checkbox']");
+        checkboxes.forEach((checkbox) => {
+          checkbox.checked = false;
+        });
+        orderForm.submit();
+      }
+      orderForm.addEventListener("submit", handleFormSubmit);
+
+      // ----------------------------------------------------------------------
+
+      // with each check/uncheck the appended dish and the list gets updated
+      checkbox.forEach((check) => {
+        check.addEventListener("change", (event) => {
+          let strObj = event.target.value;
+          // let obj = strObj.replace(/'/g, '"');
+
+          // rmove the word Object from the string
+          strObj = strObj.replace("ObjectId(", "");
+          strObj = strObj.replace(")", "");
+          let obj = strObj.replace(/'/g, '"');
+          obj = JSON.parse(obj);
+
+          if (event.target.checked) {
+            addDishToList(obj.dish_name, obj._id);
+            list.push(obj);
+          } else {
+            const unselectDish = `${obj.dish_name}-${obj._id}`;
+
+            const selectedDish = Array.from(
+              selectedDishesListNames.querySelectorAll("li")
+            ).find((li) => li.textContent.includes(unselectDish));
+
+            if (selectedDish) {
+              selectedDishesListNames.removeChild(selectedDish);
+            }
+
+            list = list.filter((dish) => dish._id !== obj._id);
+          }
+        });
+      });
+
+      // chatbot
+      const chatbotContainer = document.getElementById("chatbot-container");
+      const chatbotHeading = document.getElementById("chatbot-heading");
+      const chatbotToggleBtn = document.getElementById("chatbot-toggle-btn");
+      const chatInputField = document.getElementById("chat-input-field");
+      const chatSendBtn = document.getElementById("chat-send-btn");
+
+      chatbotToggleBtn.addEventListener("click", toggleChatbot);
+      chatInputField.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          sendMessage();
+        }
+      });
+
+      function toggleChatbot() {
+        chatbotContainer.classList.toggle("chatbot-collapsed");
+        chatbotToggleBtn.innerHTML = chatbotContainer.classList.contains(
+          "chatbot-collapsed"
+        )
+          ? "<i class='fa-solid fa-circle-chevron-up'></i>"
+          : "<i class='fa-solid fa-square-caret-down'></i>";
+
+        //  add animation to chatbot
+        chatbotContainer.animate(
+          [
+            { transform: "translateY(0px)" },
+            { transform: "translateY(-10px)" },
+            { transform: "translateY(0px)" },
+          ],
+          {
+            duration: 500,
+            iterations: 1,
+          }
+        );
+      }
+
+      function sendMessage() {
+        const message = chatInputField.value;
+        if (message.trim() === "") {
+          return;
+        }
+        appendMessage("User", message);
+        handleChatbotResponse(message);
+        chatInputField.value = "";
+      }
+
+      function appendMessage(sender, message) {
+        const chatLog = document.querySelector(".chat-log");
+        const messageContainer = document.createElement("div");
+        if (sender === "User") {
+          messageContainer.classList.add("chat-item", "chat-item--user");
+        } else {
+          messageContainer.classList.add("chat-item", "chat-item--bot");
+        }
+        messageContainer.innerHTML = `<p><strong>${sender}:</strong> ${message}</p>`;
+        chatLog.appendChild(messageContainer);
+        chatLog.scrollTop = chatLog.scrollHeight;
+      }
+
+      function handleChatbotResponse(responseTopic) {
+        loading.style.display = "block";
+        try {
+          fetch("/chatboat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ responseTopic }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.ok) {
+                appendMessage("Chatbot", data.response);
+              } else {
+                appendMessage("Chatbot", "Sorry, I am not feeling well today");
+              }
+              loading.style.display = "none";
+            });
+        } catch (error) {
+          loading.style.display = "none";
+          appendMessage("Chatbot", "Sorry, I am not feeling well today");
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Orders</title>
+    <link rel="stylesheet" href="./static/css/navbar.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        font-size: 18px;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .container {
+        width: 100%;
+        height: 70vh;
+        padding: 20px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        table-layout: fixed;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 8px;
+        font-size: 20px;
+      }
+      td {
+        font-size: 18px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      li {
+        list-style-type: none;
+      }
+
+      .no-content-div {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+
+      #status {
+        width: 100px;
+        height: 30px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        outline: none;
+      }
+
+      .view-dtl-btn {
+        padding: 10px 20px;
+        border-radius: 4px;
+        background-color: green;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-logo">
+        <img src="https://i.postimg.cc/hGKRgzsr/zesty-yum.png" alt="Logo" />
+        <span>Zesty Yum</span>
+      </div>
+      <ul class="navbar-menu">
+        <li><a href="/new-order">New Order</a></li>
+        <li><a href="/show-orders">All Orders</a></li>
+        <li><a href="/menu">Menu</a></li>
+      </ul>
+    </nav>
+    <div class="container">
+      <h1>My Orders</h1>
+      {% if orders %}
+      <table>
+        <tr>
+          <th>Order ID</th>
+          <th>Total Price</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+        {% for order in orders %}
+        <tr data-order-id="{{ order._id }}">
+          <td>{{ order._id }}</td>
+          <td>{{ order.total_price }}</td>
+          <td>{{ order.status[0:1].upper() + order.status[1:] }}</td>
+          <td>
+            <form action="/single-order/{{order._id}}" method="GET">
+              <input type="submit" class="view-dtl-btn" value="View Details" />
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <div class="no-content-div">
+        <h2>No orders to display.</h2>
+        <img
+          src="https://img.icons8.com/?size=512&id=11975&format=png"
+          alt="No Content"
+        />
+      </div>
+      {% endif %}
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.min.js"></script>
+    <script>
+      // JavaScript code
+      const socket = io("/order");
+
+      socket.on("connect", () => {
+        console.log("Socket connected");
+      });
+
+      socket.on("Greet", (data) => {
+        console.log(data.data);
+      });
+
+      socket.on("disconnect", () => {
+        console.log("Socket disconnected");
+      });
+
+      socket.on("order_status_updated", (data) => {
+        const orderId = data.orderId;
+        let status = data.status;
+
+        // Find the table row with the matching order ID
+        const orderRow = document.querySelector(
+          `tr[data-order-id="${orderId}"]`
+        );
+
+        if (orderRow) {
+          const statusCell = orderRow.querySelector("td:nth-child(3)");
+          status = status[0].toUpperCase() + status.slice(1);
+          statusCell.textContent = status;
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Zesty Yum - Orders</title>
+    <link rel="stylesheet" href="./static/css/navbar.css" />
+    <!-- import poppins font from google -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        font-size: 18px;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .container {
+        width: 100%;
+        height: 70vh;
+        padding: 20px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        table-layout: fixed;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      li {
+        list-style-type: none;
+      }
+
+      .no-content-div {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+
+      #status {
+        width: 100px;
+        height: 30px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        outline: none;
+      }
+
+      .chang-btn,
+      .dlt-btn {
+        width: 100px;
+        height: 30px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        outline: none;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: rgb(9, 177, 48);
+      }
+
+      .dlt-btn {
+        background-color: rgb(255, 0, 0);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-logo">
+        <img src="https://i.postimg.cc/hGKRgzsr/zesty-yum.png" alt="Logo" />
+        <span>Zesty Yum</span>
+      </div>
+      <ul class="navbar-menu">
+        <li><a href="/menu">Menu</a></li>
+        <li><a href="/new-order">New Order</a></li>
+      </ul>
+    </nav>
+    <div class="container">
+      <h1>Orders Summary</h1>
+      {% if orders %}
+      <table>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer Name</th>
+          <th>Dish(es)</th>
+          <th>Total Price</th>
+          <th>Status</th>
+          <th>Change Status</th>
+          <th>Delete Order</th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+          <td>{{ order._id }}</td>
+          <td>{{ order.customer_name }}</td>
+          <td>
+            <ul>
+              {% for names in order['dish_names'] %}
+              <li>{{ names }}</li>
+              {% endfor %}
+            </ul>
+          </td>
+          <td>{{order.total_price}}</td>
+          <td>{{ order.status[0].upper() + order.status[1:] }}</td>
+          <td>
+            <form action="/update-status/{{ order._id }}" method="POST">
+              <select name="status" id="status">
+                <option value="pending">Pending</option>
+                <option value="preparing">Preparing</option>
+                <option value="delivered">Delivered</option>
+              </select>
+              <button type="submit" class="chang-btn">Change</button>
+            </form>
+          </td>
+          <td>
+            <form action="/delete-order/{{ order._id }}" method="POST">
+              <button type="submit" class="dlt-btn">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <div class="no-content-div">
+        <h2>No orders to display.</h2>
+        <img
+          src="https://img.icons8.com/?size=512&id=11975&format=png"
+          alt="No Content"
+        />
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>

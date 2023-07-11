@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Order Details</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        font-size: 24px;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .navbar {
+        background-color: #333;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+
+      .navbar-logo {
+        margin-left: 1rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .navbar-logo img {
+        width: 100px;
+        height: 100px;
+        margin-right: 10px;
+        mix-blend-mode: difference;
+      }
+
+      .navbar-menu {
+        margin-right: 1rem;
+        list-style: none;
+        display: flex;
+        align-items: center;
+      }
+
+      .navbar-menu li {
+        margin-left: 10px;
+      }
+
+      .navbar-menu a {
+        color: #fff;
+        text-decoration: none;
+        padding: 10px;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+      }
+
+      .navbar-menu a:hover {
+        background-color: #555;
+      }
+
+      .order-container {
+        width: 80%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin: 20px auto;
+      }
+
+      .left-section {
+        width: 40%;
+        max-height: 500px;
+      }
+
+      .right-section {
+        width: 40%;
+        overflow-y: auto;
+        max-height: 500px;
+      }
+
+      .order-details {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      .order-details p {
+        margin-top: 10px;
+      }
+
+      .tracking-line {
+        height: 10px;
+        background-color: #ddd;
+        position: relative;
+        margin-bottom: 20px;
+        margin-top: 50px;
+        border-radius: 50vmax;
+      }
+
+      .tracking-line > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        width: 100%;
+      }
+
+      .tracking-progress {
+        height: 100%;
+        width: 0;
+        padding: 2px;
+        background-color: #007bff;
+        transition: width 0.5s ease-in-out;
+        border-radius: 50vmax;
+      }
+
+      .feedback-form {
+        border: 1px solid rgb(215, 210, 210);
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      .rating-stars {
+        display: inline-block;
+      }
+
+      .rating-stars input[type="radio"] {
+        width: 20px;
+        height: 20px;
+        display: none;
+      }
+
+      .rating-stars label {
+        color: #ddd;
+        cursor: pointer;
+        font-size: 50px;
+      }
+
+      .rating-stars label:hover,
+      .rating-stars label:hover ~ label,
+      .rating-stars input[type="radio"]:checked ~ label {
+        color: #ffdc2e;
+      }
+
+      .feedback-textarea {
+        width: 100%;
+        height: 100px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-top: 10px;
+        padding: 10px;
+      }
+
+      .submit-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+      h1 {
+        width: 80%;
+        margin: auto;
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-logo">
+        <img src="https://i.postimg.cc/hGKRgzsr/zesty-yum.png" alt="Logo" />
+        <span>Zesty Yum</span>
+      </div>
+      <ul class="navbar-menu">
+        <li><a href="/new-order">New Order</a></li>
+        <li><a href="/show-orders">All Orders</a></li>
+        <li><a href="/menu">Menu</a></li>
+      </ul>
+    </nav>
+    <br />
+    <h1>Track Your Order</h1>
+    <div class="order-container">
+      <div class="left-section">
+        <div class="order-details">
+          <h2>Order Details</h2>
+          <p>Order ID: <span id="order-id">{{singleOrd["_id"]}}</span></p>
+          <p>
+            Name:
+            <span id="customer-name">{{singleOrd["customer_name"]}}</span>
+          </p>
+          <p>Status: <span id="order-status">{{singleOrd["status"]}}</span></p>
+          <p>Dishes: {{ singleOrd["dish_names"] | join(", ") }}</p>
+          <p>
+            Delivery Address: <span id="delivery-address">123 Main St</span>
+          </p>
+        </div>
+        <div class="tracking-line">
+          <div class="tracking-progress"></div>
+          <div>
+            <span>🔘 Received</span>
+            <span>🔘 Preparing</span>
+            <span>🔘 Pending</span>
+            <span>🔘 Delivered</span>
+          </div>
+        </div>
+      </div>
+      <div class="right-section">
+        <div class="feedback-form">
+          <h2>Provide Feedback</h2>
+          <div class="rating-stars">
+            <input type="radio" id="star5" name="rating" value="5" />
+            <label for="star5" class="stars">&#9733;</label>
+            <input type="radio" id="star4" name="rating" value="4" />
+            <label for="star4" class="stars">&#9733;</label>
+            <input type="radio" id="star3" name="rating" value="3" />
+            <label for="star3" class="stars">&#9733;</label>
+            <input type="radio" id="star2" name="rating" value="2" />
+            <label for="star2" class="stars">&#9733;</label>
+            <input type="radio" id="star1" name="rating" value="1" />
+            <label for="star1" class="stars">&#9733;</label>
+          </div>
+          <textarea
+            class="feedback-textarea"
+            placeholder="Enter your feedback..."
+          ></textarea>
+          <button class="submit-button" id="submitFeedbackBtn">Submit</button>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.min.js"></script>
+
+    <script>
+      const socket = io("/order");
+      const order_status = document.getElementById("order-status");
+      const tracking_progress = document.querySelector(".tracking-progress");
+      const submitFeedbackBtn = document.getElementById("submitFeedbackBtn");
+
+      // update the initial status
+      function markInitialP() {
+        if (order_status.innerText === "delivered") {
+          tracking_progress.style.width = "100%";
+        } else if (order_status.innerText === "pending") {
+          tracking_progress.style.width = "60%";
+        } else if (order_status.innerText === "preparing") {
+          tracking_progress.style.width = "40%";
+        } else {
+          tracking_progress.style.width = "5%";
+        }
+      }
+      markInitialP();
+      // update the status
+      socket.on("order_status_updated", (data) => {
+        const orderId = data.orderId;
+        let status = data.status;
+        if (orderId === "{{singleOrd['_id']}}") {
+          order_status.innerText = status;
+          if (status === "delivered") {
+            tracking_progress.style.width = "100%";
+          } else if (status === "pending") {
+            tracking_progress.style.width = "60%";
+          } else if (status === "preparing") {
+            tracking_progress.style.width = "40%";
+          } else {
+            tracking_progress.style.width = "5%";
+          }
+        }
+      });
+
+      // submit feedback
+      submitFeedbackBtn.addEventListener("click", () => {
+        const order_status = document.getElementById("order-status");
+        let user_feedback = document.querySelector(".feedback-textarea");
+        if (order_status.innerText !== "delivered") {
+          alert("Dish Has Not Been Delivered Yet");
+          return;
+        }
+
+        if (user_feedback.value == "") {
+          user_feedback.value = "No Feedback";
+        }
+
+        let rating = document.querySelector('input[type="radio"]:checked');
+
+        rating = rating ? rating.value : 0;
+
+        let order_id = '{{singleOrd["_id"]}}';
+        let dishIds = "{{singleOrd['dish_ids'] | safe}}";
+
+        let obj = {
+          user_feedback: user_feedback.value,
+          rating,
+          order_id,
+          dishIds,
+        };
+
+
+        fetch("/add-feedback", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(obj),
+        })
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            console.log(data);
+            if (data.status == "success") {
+              alert(data.message);
+            } else {
+              alert(data.message);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            alert("Something went wrong");
+          });
+      });
+    </script>
+  </body>
+</html>

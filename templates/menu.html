@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Zesty Yum - Menu</title>
+    <link rel="stylesheet" href="./static/css/navbar.css" />
+    <link rel="stylesheet" type="text/css" href="./static/css/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-logo">
+        <img src="https://i.postimg.cc/hGKRgzsr/zesty-yum.png" alt="Logo" />
+        <span>Zesty Yum</span>
+      </div>
+      <ul class="navbar-menu">
+        <li><a href="/new-order">New Order</a></li>
+        <li><a href="/show-orders">All Orders</a></li>
+      </ul>
+    </nav>
+    <div class="container">
+      <div class="left-container">
+        <div class="add-form">
+          <h2>Add Dish</h2>
+          <form action="/add-menu" method="POST">
+            <label for="dish_name">Name:</label>
+            <input type="text" id="dish_name" name="dish_name" required /><br />
+
+            <label for="price">Price:</label>
+            <input type="text" id="price" name="price" required /><br />
+
+            <label for="availability">Availability:</label>
+            <select id="availability" name="availability">
+              <option value="yes">Yes</option>
+              <option value="no">No</option></select
+            ><br />
+            <label for="img">Image</label>
+            <input type="text" id="img" name="img" accept="image/*" /><br />
+
+            <button id="add-btn" type="submit">Add Dish</button>
+          </form>
+        </div>
+
+        <div class="update-form">
+          <h2>Update Dish</h2>
+          <form action="/update-dish" method="POST" reset>
+            <label for="update_dish_id">ID:</label>
+            <input
+              type="text"
+              id="update_dish_id"
+              name="dish_id"
+              readonly
+            /><br />
+
+            <label for="update_dish_name">Name:</label>
+            <input
+              type="text"
+              id="update_dish_name"
+              name="dish_name"
+              required
+            /><br />
+            <label for="update_dish_img">Image:</label>
+            <input
+              type="text"
+              id="update_dish_img"
+              name="img"
+              accept="image/*"
+            /><br />
+
+            <label for="update_price">Price:</label>
+            <input type="text" id="update_price" name="price" required /><br />
+
+            <label for="update_availability">Availability:</label>
+            <select id="update_availability" name="availability">
+              <option value="yes">Yes</option>
+              <option value="no">No</option></select
+            ><br />
+
+            <button type="submit" class="update-btns">Update Dish</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="right-container">
+        <div class="menu-heading">
+          <h1>Menu</h1>
+        </div>
+        <div class="display-content">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Availability</th>
+                <th>Update</th>
+                <th>Remove</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for dish in menu %}
+              <tr>
+                <td>{{ dish._id }}</td>
+                <td>
+                  <div class="table-data-with-name-img">
+                    <span><img src="{{dish.img}}" alt="Img" /></span>
+                    <span>{{ dish.dish_name }}</span>
+                  </div>
+                </td>
+                <td>{{ dish.price }}</td>
+                <td>{{ dish.availability.upper() }}</td>
+
+                <td>
+                  <button
+                    class="update-btns"
+                    onclick="displayUpdForm(JSON.stringify({ 'availability': '{{dish.availability}}', 'dish_id': '{{dish._id}}', 'dish_name': '{{dish.dish_name}}', 'price': '{{dish.price}}', 'img': '{{dish.img}}' }))"
+                  >
+                    Update
+                  </button>
+                </td>
+                <td>
+                  <form action="/remove-dish/{{ dish._id }}" method="POST">
+                    <button class="remove-btns" type="submit">Remove</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function displayUpdForm(dish) {
+        dish = JSON.parse(dish);
+
+        document.querySelector("#update_dish_id").value = dish.dish_id;
+        document.querySelector("#update_dish_name").value = dish.dish_name;
+        document.querySelector("#update_price").value = dish.price;
+        document.querySelector("#update_availability").value =
+          dish.availability;
+        document.querySelector("#update_dish_img").value = dish.img;
+      }
+    </script>
+  </body>
+</html>

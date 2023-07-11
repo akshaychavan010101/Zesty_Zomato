@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login / Register</title>
+    <link rel="stylesheet" href="./static/css/login.css" />
+  </head>
+  <body>
+    <!-- Wrapper Area -->
+    <div class="wrapper__area" id="wrapper_Area">
+      <!-- Forms Area -->
+      <div class="forms__area">
+        <form class="login__form" id="loginForm" action="/" method="POST">
+          <h1 class="form__title">Sign In!</h1>
+          <div class="input__group">
+            <label class="field">
+              <input
+                type="text"
+                name="email"
+                placeholder="Email"
+                id="loginName"
+                required
+              />
+            </label>
+            <span class="input__icon"><i class="bx bx-user"></i></span>
+            <small class="input__error_message"></small>
+          </div>
+          <div class="input__group">
+            <label class="field">
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                id="loginPassword"
+                required
+              />
+            </label>
+            <span class="input__icon"><i class="bx bx-lock"></i></span>
+            <span class="showHide__Icon"><i class="bx bx-hide"></i></span>
+            <small class="input__error_message"></small>
+          </div>
+          <div class="form__actions">
+            <label for="checkboxInput" class="remeber_me">
+              <input type="checkbox" id="checkboxInput" />
+              <span class="checkmark"></span>
+              <span>Remeber Me</span>
+            </label>
+            <div class="forgot_password">Forgot Password?</div>
+          </div>
+          <!-- Login Button -->
+          <button type="submit" class="submit-button" id="loginSubmitBtn">
+            Sign in
+          </button>
+          <!-- Alternate Login -->
+          <div class="alternate-login">
+            <div class="link">
+              <i class="bx bxl-google"></i>
+              <span>Google</span>
+            </div>
+            <div class="link">
+              <i class="bx bxl-facebook-circle"></i>
+              <span>Facebook</span>
+            </div>
+          </div>
+          <div id="loginResponse" class="response-message"></div>
+        </form>
+        <!-- End Login Form -->
+
+        <!-- Sign Up Form -->
+        <form
+          class="sign-up__form"
+          id="signUpForm"
+          action="/register"
+          method="POST"
+        >
+          <!-- Form Title -->
+          <h1 class="form__title">Sign Up!</h1>
+          <!-- inputs Groups -->
+          <div class="input__group">
+            <label class="field">
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter Your Name..."
+                id="signUpUsername"
+                required
+              />
+            </label>
+            <span class="input__icon"><i class="bx bx-user"></i></span>
+            <small class="input__error_message"></small>
+          </div>
+          <div class="input__group">
+            <label class="field">
+              <input
+                type="text"
+                name="email"
+                placeholder="Email@example.com"
+                id="signUpEmail"
+                required
+              />
+            </label>
+            <span class="input__icon"><i class="bx bx-at"></i></span>
+            <small class="input__error_message"></small>
+          </div>
+          <div class="input__group">
+            <label class="field">
+              <input
+                type="password"
+                name="password"
+                placeholder="Password123$#%&..."
+                id="signUpPassword"
+                required
+              />
+            </label>
+            <span class="input__icon"><i class="bx bx-lock"></i></span>
+            <span class="showHide__Icon"><i class="bx bx-hide"></i></span>
+            <small class="input__error_message"></small>
+          </div>
+          <div class="input__group confirm__group">
+            <label class="field">
+              <input
+                type="password"
+                name="confirm_password"
+                placeholder="Confirm Password"
+                id="signUpConfirmPassword"
+                required
+              />
+            </label>
+            <span class="input__icon"><i class="bx bx-lock"></i></span>
+            <span class="showHide__Icon"><i class="bx bx-hide"></i></span>
+            <small class="input__error_message"></small>
+          </div>
+          <!-- Sign Up Button -->
+          <button type="submit" class="submit-button" id="signUpSubmitBtn">
+            Sign Up
+          </button>
+          <!-- Alternate Login -->
+          <div class="alternate-login">
+            <div class="link">
+              <i class="bx bxl-google"></i>
+              <span>Google</span>
+            </div>
+            <div class="link">
+              <i class="bx bxl-facebook-circle"></i>
+              <span>Facebook</span>
+            </div>
+          </div>
+          <div id="signUpResponse" class="response-message"></div>
+        </form>
+        <!-- End Sign Up Form -->
+      </div>
+
+      <!-- Aside Area -->
+      <div class="aside__area" id="aside_Area">
+        <div class="login__aside-info">
+          <h4>Hello</h4>
+          <img src="https://d.top4top.io/p_1945xjz2y1.png" alt="Image" />
+          <p>Enter your personal details and start journey with us</p>
+          <button id="aside_signUp_Btn">Sign Up</button>
+        </div>
+        <div class="sign-up__aside-info">
+          <h4>Welcome</h4>
+          <img src="https://e.top4top.io/p_1945sidbp2.png" alt="Image" />
+          <p>To Keep connected with us please login with your personal info</p>
+          <button id="aside_signIn_Btn">Sign In</button>
+        </div>
+      </div>
+    </div>
+    <!-- End Wrapper Area -->
+
+    <script>
+      // Wrapper Area
+      const wrapper__Area = document.querySelector("#wrapper_Area");
+
+      // Login & Sing-Up Forms
+      const loginForm = document.querySelector("#loginForm");
+      const signUpForm = document.querySelector("#signUpForm");
+
+      // Aside Area
+      const aside__Area = document.querySelector("#aside_Area");
+
+      // Aside Sing-Up & Sign In Buttons
+      const aside__SignUp_Button = document.querySelector("#aside_signUp_Btn");
+      const aside__SignIn_Button = document.querySelector("#aside_signIn_Btn");
+
+      // Every Time Click On Aside Sign-Up & Sing-In Buttons. Call Function Chnage Form Mode
+      aside__Area.addEventListener("click", chnageFormMode);
+      aside__Area.addEventListener("click", chnageFormMode);
+
+      // Change Form Mode Function
+      function chnageFormMode(e) {
+        // Check. If The Target Element Is Aside Sign-Up Button
+        if (e.target === aside__SignUp_Button) {
+          // Add Class [ Sign Up Mode Active ] On Wrapper Area
+          wrapper__Area.classList.add("sign-up__Mode-active");
+        }
+        // Check. If The Target Element Is Aside Sign-In Button
+        if (e.target === aside__SignIn_Button) {
+          // Remove Class [ Sign Up Mode Active ] From Wrapper Area
+          wrapper__Area.classList.remove("sign-up__Mode-active");
+        }
+      }
+
+      function handleFormSubmit(event, formId, responseId) {
+        event.preventDefault();
+        const form = document.getElementById(formId);
+        const responseContainer = document.getElementById(responseId);
+        let msg = "";
+
+        let f = new FormData(form);
+        let Data = Object.fromEntries(f);
+
+        if (
+          Data.confirm_password != undefined &&
+          Data.password !== Data.confirm_password
+        ) {
+          responseContainer.innerHTML = "Passwords Do Not Match";
+          setTimeout(() => {
+            responseContainer.innerHTML = "";
+          }, 1500);
+          return;
+        }
+        fetch(form.action, {
+          method: form.method,
+          body: new FormData(form),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Update the response container with the message
+            responseContainer.innerHTML = data.message;
+            msg = data.message;
+            if (data.status == "success") {
+              responseContainer.style.color = "green";
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            // Update the response container with the error message
+            responseContainer.innerHTML =
+              "An error occurred. Please try again.";
+          });
+
+        setTimeout(() => {
+          responseContainer.innerHTML = "";
+          if (
+            msg == "User registered successfully!" ||
+            msg == "User already exists!"
+          ) {
+            window.location.href = "/";
+          } else if (msg == "Login Successful") {
+            window.location.href = "/new-order";
+          }
+        }, 2000);
+      }
+
+      // Event listener for login form submission
+      loginForm.addEventListener("submit", (event) => {
+        handleFormSubmit(event, "loginForm", "loginResponse");
+      });
+
+      // Event listener for sign up form submission
+      signUpForm.addEventListener("submit", (event) => {
+        handleFormSubmit(event, "signUpForm", "signUpResponse");
+      });
+    </script>
+  </body>
+</html>
