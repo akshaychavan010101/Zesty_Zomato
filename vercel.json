@@ -2,7 +2,6 @@
     "builds": [
         {
             "src": "app.py",
-            "name": "app",
             "use": "flask 0.10.1"
         }
     ],
